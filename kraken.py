@@ -1,11 +1,17 @@
 import inspect
+import json
+from typing import Dict
+
 import fire
 from rich.console import Console
 from rich.table import Table
 
 from bittrade_kraken_rest.endpoints.private.get_account_balance import get_account_balance
+from bittrade_kraken_rest.endpoints.private.get_open_orders import get_open_orders
+from bittrade_kraken_rest.endpoints.public.get_server_time import get_server_time
 from bittrade_kraken_rest.endpoints.raw import raw
-from bittrade_kraken_rest.environment.decorators import pretty_print
+from bittrade_kraken_rest.environment.cli import pretty_print, private, kwargs_to_options
+from bittrade_kraken_rest.models.private.get_open_orders import GetOpenOrdersOptions
 
 
 def interactive():
@@ -23,27 +29,38 @@ def interactive():
             func(*args)
 
 
-def _help(console):
-    """
-    List down options
-    :return:
-    """
-    keys = list(methods.keys())
-    keys.sort()
-    table = Table()
-    table.add_column('Name')
-    table.add_column('Doc')
-    for name in keys:
-        func = methods[name]
-        table.add_row(name, func.__doc__)
-    console.print(table)
+class Cli:
+    @staticmethod
+    def get_open_orders(data: Dict = None):
+        """
 
+        :param data: Json string in the GetOpenOrdersOptions format; refer https://docs.kraken.com/rest/#tag/User-Data/operation/getOpenOrders
+        :return:
+        """
+        options = data or {}
 
-methods = {
-    "get_account_balance": pretty_print(get_account_balance),
-    "raw": pretty_print(raw),
-    "interactive": interactive,
-}
+        return private(
+            pretty_print(
+                kwargs_to_options(GetOpenOrdersOptions, get_open_orders)
+            )
+        )(**options)
+
+    @staticmethod
+    def interactive():
+        return interactive()
+
+    @staticmethod
+    def get_account_balance():
+        return private(pretty_print(get_account_balance))
+
+    @staticmethod
+    def get_server_time():
+        return pretty_print(get_server_time)
+
+    @staticmethod
+    def raw():
+        return pretty_print(raw)
+
 
 if __name__ == '__main__':
-    fire.Fire(methods)
+    fire.Fire(Cli)
