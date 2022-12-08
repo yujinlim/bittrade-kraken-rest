@@ -14,7 +14,7 @@ def interactive():
         if command == 'q':
             return
         if command == '?':
-            help(console)
+            _help(console)
         else:
             args = []
             func = methods[command]
@@ -23,7 +23,7 @@ def interactive():
             func(*args)
 
 
-def help(console):
+def _help(console):
     """
     List down options
     :return:
@@ -37,6 +37,7 @@ def help(console):
         func = methods[name]
         table.add_row(name, func.__doc__)
     console.print(table)
+
 
 methods = {
     "get_account_balance": pretty_print(get_account_balance),
