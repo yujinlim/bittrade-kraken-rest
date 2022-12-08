@@ -1,18 +1,27 @@
+import inspect
 import fire
 from rich.console import Console
-from rich.table import  Table
+from rich.table import Table
 
 from bittrade_kraken_rest.endpoints.private.get_account_balance import get_account_balance
 from bittrade_kraken_rest.endpoints.raw import raw
+from bittrade_kraken_rest.environment.decorators import pretty_print
 
 
 def interactive():
     console = Console()
     while command := console.input('Type command: [italic]use ? for a list, q to quit[/italic]\n'):
-        if command == '?':
-            help(console)
         if command == 'q':
             return
+        if command == '?':
+            help(console)
+        else:
+            args = []
+            func = methods[command]
+            for arg_name in inspect.getfullargspec(methods[command]).args:
+                args.append(console.input(f'Value for {arg_name}'))
+            func(*args)
+
 
 def help(console):
     """
@@ -30,8 +39,8 @@ def help(console):
     console.print(table)
 
 methods = {
-    "get_account_balance": get_account_balance,
-    "raw": raw,
+    "get_account_balance": pretty_print(get_account_balance),
+    "raw": pretty_print(raw),
     "interactive": interactive,
 }
 

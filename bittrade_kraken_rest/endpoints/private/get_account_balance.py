@@ -3,7 +3,6 @@ from bittrade_kraken_rest.environment.decorators import with_api_key, pretty_pri
 
 
 @with_api_key
-@pretty_print
 def get_account_balance(api_key: str = ''):
     """
     Get account balances
