@@ -7,7 +7,6 @@ from ..order import Order
 
 @dataclasses.dataclass
 class GetOpenOrdersResult:
-    count: int
     open: Dict[str, List[Order]]
 
 

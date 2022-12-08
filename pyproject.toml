@@ -1,17 +1,18 @@
 [tool.poetry]
 name = "bittrade-kraken-rest"
-version = "0.1.0"
-description = ""
-authors = ["mat <matt@techspace.asia>"]
+version = "0.9.0"
+description = "Kraken REST library with an optional CLI"
+authors = ["Matt Kho <matt@techspace.asia>"]
 
 [tool.poetry.dependencies]
 python = "^3.10"
 requests = "^2.28.1"
-rich = "^12.6.0"
-fire = "^0.4.0"
+rich = {version = "^12.6.0", extras = ["fire"]}
+fire = {version = "^0.4.0", extras = ["fire"]}
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
+ipython = "^8.7.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

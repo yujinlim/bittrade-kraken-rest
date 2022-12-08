@@ -38,14 +38,15 @@ def pretty_print(func):
         else:
             console.print(f'Failed with status {outcome.status_code}')
         posted_data = urllib.parse.parse_qs(request.body)
-        console.rule('Data sent:', style='cyan')
         table = Table('Name', 'Value')
         for k, v in posted_data.items():
             if k == 'nonce':
                 continue
             table.add_row(k, v[0])
-        console.print(table)
-        console.line()
+        if len(table.rows):
+            console.rule('Data sent:', style='cyan')
+            console.print(table)
+            console.line()
         console.rule('From request:', style='cyan')
         console.print(request.__dict__)
         console.line(2)
