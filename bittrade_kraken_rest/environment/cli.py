@@ -3,9 +3,13 @@ import importlib
 import urllib.parse
 from functools import wraps
 from os import getenv
+from typing import Union
+
 from rich.table import Table
 
 import requests
+
+from bittrade_kraken_rest.models.request import Response, RequestWithResponse
 
 try:
     from rich.console import Console
@@ -21,22 +25,23 @@ def pretty_print(func):
 
     @wraps(func)
     def fn(*args, **kwargs):
-        outcome: requests.Response = func(*args, **kwargs)
-        request: requests.Request = outcome.request
+        outcome: Union[Response, RequestWithResponse] = func(*args, **kwargs)
+        response: requests.Response = outcome.response
+        request: requests.Request = response.request
         console.line()
-        if outcome.ok:
-            if not outcome.json()['error']:
+        if response.ok:
+            if not outcome.get_error():
                 style = 'green'
             else:
                 style = 'red'
         else:
             style = 'bold red'
         console.rule(request.url, style=style)
-        if outcome.ok:
-            console.print_json(outcome.text)
+        if response.ok:
+            console.print_json(response.text)
             console.line()
         else:
-            console.print(f'Failed with status {outcome.status_code}')
+            console.print(f'Failed with status {response.status_code}')
         posted_data = urllib.parse.parse_qs(request.body)
         table = Table('Name', 'Value')
         for k, v in posted_data.items():
@@ -62,21 +67,23 @@ def private(func):
     def fn(*args, **kwargs):
         try:
             module = importlib.import_module(
-                getenv('KRAKEN_SIGNATURE_MODULE', 'kraken_signature_generator')
+                getenv('KRAKEN_SIGNATURE_MODULE', 'sign')
             )
-            generate_kraken_signature = module.generate_kraken_signature
+            sign = module.sign
         except (ImportError, AttributeError) as exc:
             console.bell()
             console.line()
             console.rule('Kraken signature implementation missing')
             console.print('''
-                This library believes in BYOC (Bring Your Own Credentials).
-                Implement the signature calculation yourself and export its module path to env [red]KRAKEN_SIGNATURE_MODULE[/red]
-                You can simply copy from Kraken's official reference https://docs.kraken.com/rest/#section/Authentication/Headers-and-Signature
+                This library believes in BYOS (Bring Your Own Signature).
+                Implement the signing of request yourself and export its module path to env [red]KRAKEN_SIGNATURE_MODULE[/red] (default 'sign.py') 
+                See the README for code sample
             ''')
             raise exc
-        kwargs['generate_kraken_signature'] = generate_kraken_signature
-        return func(*args, **kwargs)
+        with func(**kwargs) as prep:
+            sign(prep)
+        return prep.response
+
 
     return fn
 

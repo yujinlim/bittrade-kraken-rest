@@ -39,4 +39,5 @@ pip-wheel-metadata
 /poetry.toml
 
 poetry/core/*
-kraken_signature_generator.py
+sign.py
+config_local/

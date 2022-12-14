@@ -1,51 +1,67 @@
-from typing import Literal, Optional
+from contextlib import contextmanager
 import requests
 
 from bittrade_kraken_rest.connection.nonce import get_nonce
-from bittrade_kraken_rest.connection.signature import KrakenSignatureBuilder
+from bittrade_kraken_rest.models.request import RequestWithResponse, Response
 
 API_URL = 'https://api.kraken.com'
 
 
-def send_request(*, url: str, method: Literal['get', 'post'], api_key: str='', data=None, generate_kraken_signature: Optional[KrakenSignatureBuilder]=None) -> requests.Response:
-    """Send request to Kraken REST API
-
-      Args:
-          api_key (str): api key
-          secret (str): secret
-          url (str): should start with a "/" or include the full kraken api domain (so you may use beta apis)
-          method (get|post): http method
-          data (dict): Data to be sent to kraken
-          generate_api_key: method that accepts a url and data dictionary and returns
-
-      Returns:
-          _type_: _description_
+@contextmanager
+def send_private(*, url: str, data=None, headers=None, result_class=None) -> RequestWithResponse:
     """
-    data = dict(
-        nonce=get_nonce(),
-        **(data or {})
-    )
-    if 'private' in url:
-        if not generate_kraken_signature:
-            raise NotImplementedError('You need to implement generate_kraken_signature for private urls')
-        headers = {
-            'API-Key': api_key,
-            'API-Sign': generate_kraken_signature(url, data),
-            'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8'
-        }
-    else:
-        headers = {
-            'Content-Type': 'application/json'
-        }
 
+    :param url: Note that url is actually just the path here, starting with /0/private/...
+    :param data:
+    :param headers:
+    :param result_class:
+    :return:
+    """
+    data = data or {}
+    headers = headers or {}
+    if 'nonce' not in data:
+        # we don't want to mutate `data` by adding the nonce
+        data = dict(
+            nonce=get_nonce(),
+            **data
+        )
+    headers['Content-Type'] = 'application/x-www-form-urlencoded; charset=utf-8'
 
-
-    if not url.startswith(API_URL):
-        url = f'{API_URL}{url}'
-    return getattr(requests, method.lower())(
-        url,
+    request = RequestWithResponse(
+        method='POST',
+        url=url,
         data=data,
         headers=headers
     )
+    # Give context manager a chance to sign
+    yield request
+    request.url = f'{API_URL}{url}'
+    request.response = Response(session.send(request.prepare()), result_class)
 
 
+def send_public(*, url: str, params=None, headers=None, result_class=None
+                ) -> Response:
+    """Send request to Kraken public REST API.
+
+    All public endpoints use GET
+
+      Args:
+          url (str): should start with a "/" or include the full kraken api domain (so you may use beta apis)
+          params (dict): Query params
+          headers:
+
+      Returns:
+          requests.Response:
+    """
+    headers = headers or {}
+    params = params or {}
+
+    headers['Content-Type'] = 'application/json'
+
+    if not url.startswith(API_URL):
+        url = f'{API_URL}{url}'
+
+    return Response(session.get(url, params=params, headers=headers), result_class)
+
+
+session = requests.Session()

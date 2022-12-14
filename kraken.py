@@ -1,5 +1,6 @@
 import inspect
 import json
+import sys
 from typing import Dict
 
 import fire
@@ -12,6 +13,7 @@ from bittrade_kraken_rest import (
     get_server_time,
     get_system_status,
 )
+from bittrade_kraken_rest.endpoints.private.get_websockets_token import get_websockets_token
 from bittrade_kraken_rest.endpoints.raw import raw
 from bittrade_kraken_rest.environment.cli import pretty_print, private, kwargs_to_options
 from bittrade_kraken_rest.models.private.get_open_orders import GetOpenOrdersOptions
@@ -27,21 +29,32 @@ class Cli:
         """
         options = data or {}
 
-        return private(
-            pretty_print(
+        return pretty_print(
+            private(
                 kwargs_to_options(GetOpenOrdersOptions, get_open_orders)
             )
         )(**options)
 
     @staticmethod
+    def get_websockets_token():
+        return pretty_print(
+            private(get_websockets_token)
+        )()
+
+    @staticmethod
     def interactive():
+        sys.exit(1)
         console = Console()
         while command := console.input('Type endpoint name: [italic]use ? for a list, q to quit[/italic]\n'):
             if command == 'q':
                 return
             if command == '?':
                 table = Table('Endpoint', 'Description')
-
+                endpoints = sorted([method for method in dir(Cli) if not method.startswith('__')])
+                for name in endpoints:
+                    method = getattr(Cli, name)
+                    table.add_row(name, method.__doc__)
+                console.print(table)
             else:
                 func = getattr(Cli, command)
                 signature = inspect.signature(func)
@@ -57,8 +70,8 @@ class Cli:
 
     @staticmethod
     def get_account_balance():
-        return private(
-            pretty_print(get_account_balance))()
+        return pretty_print(
+            private(get_account_balance))()
 
     @staticmethod
     def get_server_time():

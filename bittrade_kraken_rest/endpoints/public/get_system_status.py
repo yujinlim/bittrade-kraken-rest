@@ -1,15 +1,10 @@
-import requests
-
-from bittrade_kraken_rest.connection import send_request
-from bittrade_kraken_rest.environment.decorators import to_result
+from bittrade_kraken_rest.connection import send_public
 from bittrade_kraken_rest.models.public.get_system_status import GetSystemStatusResult
+from bittrade_kraken_rest.models.request import Response
 
 
-def get_system_status():
-    return send_request(
+def get_system_status() -> Response[GetSystemStatusResult]:
+    return send_public(
         url='/0/public/SystemStatus',
-        method='get',
+        result_class=GetSystemStatusResult
     )
-
-
-get_system_status_result = to_result(GetSystemStatusResult, get_system_status)

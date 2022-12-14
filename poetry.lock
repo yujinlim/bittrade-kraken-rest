@@ -82,7 +82,7 @@ name = "commonmark"
 version = "0.9.1"
 description = "Python parser for the CommonMark Markdown spec"
 category = "main"
-optional = false
+optional = true
 python-versions = "*"
 
 [package.extras]
@@ -109,10 +109,10 @@ tests = ["asttokens", "pytest", "littleutils", "rich"]
 
 [[package]]
 name = "fire"
-version = "0.4.0"
+version = "0.5.0"
 description = "A library for automatically generating command line interfaces."
 category = "main"
-optional = false
+optional = true
 python-versions = "*"
 
 [package.dependencies]
@@ -341,7 +341,7 @@ name = "rich"
 version = "12.6.0"
 description = "Render rich text, tables, progress bars, syntax highlighting, markdown and more to the terminal"
 category = "main"
-optional = false
+optional = true
 python-versions = ">=3.6.3,<4.0.0"
 
 [package.dependencies]
@@ -380,7 +380,7 @@ name = "termcolor"
 version = "2.1.1"
 description = "ANSI color formatting for output in terminal"
 category = "main"
-optional = false
+optional = true
 python-versions = ">=3.7"
 
 [package.extras]
@@ -388,7 +388,7 @@ tests = ["pytest", "pytest-cov"]
 
 [[package]]
 name = "traitlets"
-version = "5.7.0"
+version = "5.7.1"
 description = "Traitlets Python configuration system"
 category = "dev"
 optional = false
@@ -421,10 +421,13 @@ category = "dev"
 optional = false
 python-versions = "*"
 
+[extras]
+fire = ["rich", "fire"]
+
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "d88d2862e2e9210c68810782bb7501705f736b1c114931abd40f74500fdacd30"
+content-hash = "32f177631e003c1bf5af52dc56e4d275dad20e4b233ef6f0ddf70bcdb4e57c99"
 
 [metadata.files]
 appnope = [
