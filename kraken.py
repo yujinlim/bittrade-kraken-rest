@@ -1,9 +1,12 @@
 import inspect
 import json
 import sys
+from concurrent.futures import ThreadPoolExecutor
+import time
 from typing import Dict
 
 import fire
+import websocket
 from rich.console import Console
 from rich.table import Table
 
@@ -40,6 +43,42 @@ class Cli:
         return pretty_print(
             private(get_websockets_token)
         )()
+
+    @staticmethod
+    def authenticated_websocket():
+        token = private(get_websockets_token)().get_result().token
+        console = Console()
+        def on_message(ws, message):
+            if message != '{"event":"heartbeat"}':
+                console.print_json(message)
+
+        def on_open(ws):
+            message = {
+                "event": "subscribe",
+                "subscription": {
+                    "name": "ownTrades",
+                    "token": token
+                }
+            }
+            console.print("Activating token by subbing to ownTrades")
+            ws.send(json.dumps(message))
+            message["event"] = "unsubscribe"
+            # We should actually wait for the subscription confirmation but it's ok here
+            time.sleep(2)
+            ws.send(json.dumps(message))
+            console.print("Unsub from ownTrades")
+
+        socket_connection = websocket.WebSocketApp("wss://ws-auth.kraken.com", on_message=on_message, on_open=on_open)
+
+        executor = ThreadPoolExecutor()
+        executor.submit(socket_connection.run_forever)
+        executor.shutdown(wait=False)
+
+        while command := console.input('Send message:\n'):
+            command = json.loads(command)
+            command['token'] = token
+            print(json.dumps(command))
+            socket_connection.send(json.dumps(command))
 
     @staticmethod
     def interactive():
