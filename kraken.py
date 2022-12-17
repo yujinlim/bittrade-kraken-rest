@@ -1,9 +1,9 @@
 import inspect
-import json
+import orjson
 import sys
 from concurrent.futures import ThreadPoolExecutor
 import time
-from typing import Dict
+from typing import Dict, Literal, List
 
 import fire
 import websocket
@@ -45,7 +45,7 @@ class Cli:
         )()
 
     @staticmethod
-    def authenticated_websocket():
+    def authenticated_websocket(*channels: List[Literal['ownTrades', 'openOrders']]):
         token = private(get_websockets_token)().get_result().token
         console = Console()
         def on_message(ws, message):
@@ -60,13 +60,18 @@ class Cli:
                     "token": token
                 }
             }
-            console.print("Activating token by subbing to ownTrades")
-            ws.send(json.dumps(message))
-            message["event"] = "unsubscribe"
-            # We should actually wait for the subscription confirmation but it's ok here
-            time.sleep(2)
-            ws.send(json.dumps(message))
-            console.print("Unsub from ownTrades")
+            if not channels:
+                console.print("Activating token by subbing to ownTrades")
+                ws.send(orjson.dumps(message))
+                message["event"] = "unsubscribe"
+                # We should actually wait for the subscription confirmation but it's ok here
+                time.sleep(2)
+                ws.send(orjson.dumps(message))
+                console.print("Unsub from ownTrades")
+            else:
+                for channel in channels:
+                    message['subscription']['name'] = channel
+                ws.send(orjson.dumps(message))
         def on_close(*args):
             console.rule('Websocket disconnected')
 
@@ -79,12 +84,12 @@ class Cli:
         while command := console.input('Send message:\n'):
             if command:
                 try:
-                    command = json.loads(command)
+                    command = orjson.loads(command)
                     command['token'] = token
                 except:
                     console.print_exception()
                 else:
-                    socket_connection.send(json.dumps(command))
+                    socket_connection.send(orjson.dumps(command))
 
     @staticmethod
     def interactive():

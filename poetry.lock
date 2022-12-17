@@ -201,6 +201,14 @@ python-versions = ">=3.5"
 traitlets = "*"
 
 [[package]]
+name = "orjson"
+version = "3.8.3"
+description = "Fast, correct Python JSON library supporting dataclasses, datetimes, and numpy"
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[[package]]
 name = "packaging"
 version = "22.0"
 description = "Core utilities for Python packages"
@@ -442,7 +450,7 @@ fire = ["rich", "fire", "websocket-client"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "01a682339d98c9f91bb3efce212e7c8c1b1af033488785ce7cc19a1a38c08b23"
+content-hash = "62776d4fca9face17cdb6534e28d59a8fe666ed43f150096d75cfbf7353a95d5"
 
 [metadata.files]
 appnope = [
@@ -474,6 +482,7 @@ iniconfig = [
 ipython = []
 jedi = []
 matplotlib-inline = []
+orjson = []
 packaging = []
 parso = [
     {file = "parso-0.8.3-py2.py3-none-any.whl", hash = "sha256:c001d4636cd3aecdaf33cbb40aebb59b094be2a74c556778ef5576c175e19e75"},
