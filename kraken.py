@@ -67,18 +67,24 @@ class Cli:
             time.sleep(2)
             ws.send(json.dumps(message))
             console.print("Unsub from ownTrades")
+        def on_close(*args):
+            console.rule('Websocket disconnected')
 
-        socket_connection = websocket.WebSocketApp("wss://ws-auth.kraken.com", on_message=on_message, on_open=on_open)
+        socket_connection = websocket.WebSocketApp("wss://ws-auth.kraken.com", on_message=on_message, on_open=on_open, on_close=on_close)
 
         executor = ThreadPoolExecutor()
         executor.submit(socket_connection.run_forever)
         executor.shutdown(wait=False)
 
         while command := console.input('Send message:\n'):
-            command = json.loads(command)
-            command['token'] = token
-            print(json.dumps(command))
-            socket_connection.send(json.dumps(command))
+            if command:
+                try:
+                    command = json.loads(command)
+                    command['token'] = token
+                except:
+                    console.print_exception()
+                else:
+                    socket_connection.send(json.dumps(command))
 
     @staticmethod
     def interactive():
