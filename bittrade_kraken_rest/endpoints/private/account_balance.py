@@ -1,4 +1,5 @@
 from bittrade_kraken_rest.connection import send_private
+from bittrade_kraken_rest.models.private.get_account_balance import GetAccountBalanceResult
 
 
 def get_account_balance():
@@ -7,5 +8,5 @@ def get_account_balance():
     :return:
     """
     return send_private(
-        url='/0/private/Balance',
+        url='/0/private/Balance', result_class=GetAccountBalanceResult
     )
