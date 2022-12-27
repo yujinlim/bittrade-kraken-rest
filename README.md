@@ -6,14 +6,12 @@ Install
 
 `pip install bittrade-kraken-rest` or `poetry add bittrade-kraken-rest`
 
-If you intend to use the CLI, install `bittrade-kraken-rest[fire]`
-
-Not all Kraken endpoints are implemented yet
+Not all Kraken endpoints are implemented yet.
 
 Public endpoints
 ------
 
-For all public endpoints, simply use `get_<endpoint>` or e.g. `python kraken.py get_system_status` for the CLI.
+For all public endpoints, simply use `get_<endpoint>`.
 
 Bring Your Own ~~Credentials~~ Signature (Private endpoints)
 ---
@@ -21,10 +19,12 @@ Bring Your Own ~~Credentials~~ Signature (Private endpoints)
 TLDR; Don't pass your API secret but sign the requests yourself, with your own code. It's safer.
 
 This library doesn't want to ever access your Kraken secret keys.
+
 Most libraries expect you to provide your api key and secret. I'm not comfortable doing that with third-party code, even open sourced.
+
 Here instead, the library prepares the request, which you then sign using your own code and the library finishes the job. It has NO access to your secret.
 
-Thankfully this is quite straightforward: you need to implement a `sign(request: RequestWithResponse) -> None` method and do a two step process:
+Thankfully this is quite straightforward: you need to implement a `sign(request: RequestWithResponse) -> None` method which sets the correct headers and then follow a two step process:
 
 ```python
 prep: RequestWithResponse
@@ -52,8 +52,8 @@ def generate_kraken_signature(urlpath, data, secret):
 
 
 def sign(request):
-    request.headers['API-Key'] = getenv('KRAKEN_API_KEY')  # can also use Path('./config_local/key') and paste the key in that file, which is gitignored
-    request.headers['API-Sign'] = generate_kraken_signature(request.url, request.data, getenv('KRAKEN_API_SECRET'))  # can also use Path('./config_local/secret') and paste the secret in that file, which is gitignored
+    request.headers['API-Key'] = getenv('KRAKEN_API_KEY')  # this is just one example of how to read the API key/secret; alternatives include docker secrets and config files
+    request.headers['API-Sign'] = generate_kraken_signature(request.url, request.data, getenv('KRAKEN_API_SECRET'))
 ```
 
 
