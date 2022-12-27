@@ -1,8 +1,11 @@
 [tool.poetry]
 name = "bittrade-kraken-rest"
-version = "0.9.0"
+version = "0.9.1"
 description = "Kraken REST library with an optional CLI"
 authors = ["Matt Kho <matt@techspace.asia>"]
+readme = "README.md"
+homepage = "https://github.com/TechSpaceAsia/bittrade-kraken-rest"
+repository = "https://github.com/TechSpaceAsia/bittrade-kraken-rest"
 
 [tool.poetry.dependencies]
 python = "^3.10"
