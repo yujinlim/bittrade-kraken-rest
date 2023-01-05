@@ -1,34 +1,33 @@
-import dataclasses
-import json
-from contextlib import contextmanager
-from typing import TypeVar, Generic, List
-
+from typing import Any
 import requests
+from bittrade_kraken_rest.connection.session import session
 
-T = TypeVar("T")
+from returns.io import IOResult, impure_safe
+from returns.result import safe
+from returns.pipeline import flow
+from returns.pointfree import bind_result
 
+def fetch(request: requests.PreparedRequest) -> IOResult[dict[str, Any], Exception]:
+    return flow(
+        request,
+        _make_request,
+        bind_result(_parse_json),
+        bind_result(_get_result),
+    )
 
-class Response(Generic[T]):
-    as_json = None
+@impure_safe
+def _make_request(request: requests.PreparedRequest) -> requests.Response:
+    response = session.send(request)
+    response.raise_for_status()
+    return response
 
-    def __init__(self, response: requests.Response, result_class: T):
-        self.response = response
-        self._result_class = result_class
-        try:
-            self.as_json = response.json()
-        except json.JSONDecodeError:
-            pass
+@safe
+def _parse_json(response: requests.Response) -> dict[str, Any]:
+    return response.json()
 
-    def get_result(self) -> T:
-        return self._result_class(**self.as_json['result'])
+@safe
+def _get_result(json_response: dict[str, Any]) -> list | dict:
+    if 'result' in json_response:
+        return json_response['result']
+    raise Exception(json_response['error'][0])
 
-    def get_error(self) -> List[str]:
-        return self.as_json['error']
-
-    @property
-    def request(self):
-        return self.response.request
-
-
-class RequestWithResponse(Generic[T], requests.Request):
-    response: Response[T]

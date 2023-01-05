@@ -2,13 +2,12 @@ from contextlib import contextmanager
 import requests
 
 from bittrade_kraken_rest.connection.nonce import get_nonce
-from bittrade_kraken_rest.models.request import RequestWithResponse, Response
+from bittrade_kraken_rest.models.request import fetch
 
 API_URL = 'https://api.kraken.com'
 
 
-@contextmanager
-def send_private(*, url: str, data=None, headers=None, result_class=None) -> RequestWithResponse:
+def send_private(*, url: str, data=None, headers=None, result_class=None) -> requests.PreparedRequest:
     """
 
     :param url: Note that url is actually just the path here, starting with /0/private/...
@@ -40,7 +39,7 @@ def send_private(*, url: str, data=None, headers=None, result_class=None) -> Req
 
 
 def send_public(*, url: str, params=None, headers=None, result_class=None
-                ) -> Response:
+                ):
     """Send request to Kraken public REST API.
 
     All public endpoints use GET
