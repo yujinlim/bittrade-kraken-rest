@@ -24,14 +24,12 @@ Most libraries expect you to provide your api key and secret. I'm not comfortabl
 
 Here instead, the library prepares the request, which you then sign using your own code and the library finishes the job. It has NO access to your secret.
 
-Thankfully this is quite straightforward: you need to implement a `sign(request: RequestWithResponse) -> None` method which sets the correct headers and then follow a two step process:
+Thankfully this is quite straightforward: you need to implement a `sign(request: PreparedRequest) -> None` method which sets the correct headers and then follow a two step process:
 
 ```python
-prep: RequestWithResponse
-with get_websockets_token() as prep:
-    sign(prep)  # copy `sign` from readme below or implement your own method.
-# Once you exit the `with` context, the response object is available.
-result: GetWebsocketsTokenResult = prep.response.get_result()
+request: PreparedRequest = get_websockets_token()
+sign(request)
+result = get_result(request)
 ```
 
 And here is a sample code for `sign` implementation. Feel free to copy it or implement your own signature function:
@@ -57,22 +55,7 @@ def sign(request):
 ```
 
 
-When using the CLI, simply put the above code (or your own) inside a file called `sign.py` at the root of the library (same level as `kraken.py`).
-
-
 CLI
 ---
 
-To use the CLI, clone/fork this repo then:
-
-`python kraken.py <command>`
-
-List of commands `python kraken.py --help`
-
-Auto complete can be achieved using [Google Fire's commands](https://google.github.io/python-fire/using-cli/#-completion-generating-a-completion-script)
-
-### Authenticated Websocket
-
-`python kraken.py authenticated_websocket`
-
-You will need to have set up the `sign.py` file as described 
+The CLI has been moved to [its own repo](https://github.com/TechSpaceAsia/bittrade-kraken-cli)

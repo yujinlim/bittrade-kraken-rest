@@ -8,5 +8,5 @@ def get_account_balance():
     :return:
     """
     return send_private(
-        url='/0/private/Balance', result_class=GetAccountBalanceResult
+        url='/0/private/Balance', result_class=dict
     )

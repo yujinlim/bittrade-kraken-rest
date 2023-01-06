@@ -1,7 +1,7 @@
-import dataclasses
+from pydantic.dataclasses import dataclass
 
 
-@dataclasses.dataclass
+@dataclass
 class GetWebsocketsTokenResult:
     expires: int
     token: str
