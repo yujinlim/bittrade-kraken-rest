@@ -1,7 +1,7 @@
+import dataclasses
 from typing import TypedDict
 
 from ..message import KrakenMessage
-import dataclasses
 
 
 class GetTradeBalanceResult(TypedDict):
@@ -15,7 +15,6 @@ class GetTradeBalanceResult(TypedDict):
     mf: str
     ml: str
     uv: str
-
 
 
 @dataclasses.dataclass

@@ -8,5 +8,5 @@ def get_trade_balance():
     :return:
     """
     return send_private(
-        url='/0/private/TradeBalance', result_class=GetTradeBalanceResult
+        url="/0/private/TradeBalance", result_class=GetTradeBalanceResult
     )

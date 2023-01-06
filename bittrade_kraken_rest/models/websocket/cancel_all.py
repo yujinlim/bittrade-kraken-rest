@@ -6,6 +6,7 @@ from typing import Literal
 class CancelAllEvent:
     event = "cancelAll"
 
+
 @dataclasses.dataclass
 class CancelAllResult:
     count: int = 0

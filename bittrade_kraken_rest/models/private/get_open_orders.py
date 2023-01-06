@@ -1,5 +1,5 @@
 import dataclasses
-from typing import List, Dict, Optional, Literal
+from typing import Dict, List, Literal, Optional
 
 from ..message import KrakenMessage
 from ..order import Order

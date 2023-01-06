@@ -1,9 +1,8 @@
-import pytest
-from unittest.mock import MagicMock
-from unittest.mock import patch
-from bittrade_kraken_rest.connection.observable import send_public
-import responses
 import requests
+import responses
+
+from bittrade_kraken_rest.connection.observable import send_public
+
 
 @responses.activate
 def test_connection_observable_request_ok():
@@ -14,13 +13,14 @@ def test_connection_observable_request_ok():
         status=200,
     )
     asserted = False
+
     def assertion(value: responses.Response):
         nonlocal asserted
         asserted = True
         assert value.ok
-        assert value.json() == {'error': [], 'result': {'a': 'b'}}
+        assert value.json() == {"error": [], "result": {"a": "b"}}
 
-    send_public('/0/ServerTime').subscribe(assertion)
+    send_public("/0/ServerTime").subscribe(assertion)
     assert asserted
 
 
@@ -33,14 +33,16 @@ def test_connection_observable_request_error():
         status=400,
     )
     asserted = False
+
     def assertion(error):
         nonlocal asserted
         asserted = True
         assert type(error) == requests.HTTPError
-        assert str(error).startswith('400')
+        assert str(error).startswith("400")
 
-    send_public('/0/ServerTime').subscribe(on_error=assertion)
+    send_public("/0/ServerTime").subscribe(on_error=assertion)
     assert asserted
+
 
 @responses.activate
 def test_connection_observable_request_kraken_error():
@@ -51,11 +53,12 @@ def test_connection_observable_request_kraken_error():
         status=200,
     )
     asserted = False
+
     def assertion(error):
         nonlocal asserted
         asserted = True
         assert type(error) == Exception
-        assert str(error) == 'Not cool'
+        assert str(error) == "Not cool"
 
-    send_public('/0/ServerTime').subscribe(on_error=assertion)
+    send_public("/0/ServerTime").subscribe(on_error=assertion)
     assert asserted
