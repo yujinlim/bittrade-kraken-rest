@@ -5,7 +5,7 @@ from bittrade_kraken_rest.connection.session import session
 from returns.io import IOResult, impure_safe
 from returns.result import safe
 from returns.pipeline import flow
-from returns.pointfree import bind_result
+from returns.pointfree import bind_result, bind
 
 def fetch(request: requests.PreparedRequest) -> IOResult[dict[str, Any], Exception]:
     return flow(

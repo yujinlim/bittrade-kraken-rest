@@ -3,6 +3,8 @@ import requests
 
 from bittrade_kraken_rest.connection.nonce import get_nonce
 from bittrade_kraken_rest.models.request import fetch
+from returns.result import ResultE
+
 
 API_URL = 'https://api.kraken.com'
 
@@ -38,8 +40,7 @@ def send_private(*, url: str, data=None, headers=None, result_class=None) -> req
     request.response = Response(session.send(request.prepare()), result_class)
 
 
-def send_public(*, url: str, params=None, headers=None, result_class=None
-                ):
+def send_public(*, url: str, params=None, headers=None) -> ResultE[dict | list]:
     """Send request to Kraken public REST API.
 
     All public endpoints use GET
@@ -60,7 +61,13 @@ def send_public(*, url: str, params=None, headers=None, result_class=None
     if not url.startswith(API_URL):
         url = f'{API_URL}{url}'
 
-    return Response(session.get(url, params=params, headers=headers), result_class)
+    request = requests.Request(
+        method='GET',
+        url=url,
+        params=params,
+        headers=headers
+    ).prepare()
+    return fetch(request)
 
 
 session = requests.Session()
