@@ -11,7 +11,17 @@ Not all Kraken endpoints are implemented yet.
 Public endpoints
 ------
 
-For all public endpoints, simply use `get_<endpoint>`.
+```python
+from bittrade_kraken_rest import get_server_time, GetServerTimeResult, map_get_result
+
+get_server_time().pipe(
+    map_get_result(GetTradeBalanceResult)
+).subscribe(
+    on_next=lambda x: print('Server time:', x)
+)
+```
+
+*The above example is complete, it should run as is*
 
 Bring Your Own ~~Credentials~~ Signature (Private endpoints)
 ---
@@ -24,13 +34,22 @@ Most libraries expect you to provide your api key and secret. I'm not comfortabl
 
 Here instead, the library prepares the request, which you then sign using your own code and the library finishes the job. It has NO access to your secret.
 
-Thankfully this is quite straightforward: you need to implement a `sign(request: PreparedRequest) -> None` method which sets the correct headers and then follow a two step process:
+Thankfully this is quite straightforward: you need to implement a `sign(request: PreparedRequest) -> PreparedRequest` method which sets the correct headers and then follow a two step process:
 
 ```python
-request: PreparedRequest = get_websockets_token()
-sign(request)
-result = get_result(request)
+from bittrade_kraken_rest import get_websockets_token, GetWebsocketsTokenResult, map_get_result
+from reactivex import operators
+
+get_websockets_token().pipe(
+    operators.map(sign),
+    map_get_result(GetWebsocketsTokenResult)
+).subscribe(
+    on_next=lambda x: print('Token:', x.token),
+    on_error=lambda exc: print('Failed to load token %s', exc)
+)
 ```
+
+*The above example is complete, it should run as is*
 
 And here is a sample code for `sign` implementation. Feel free to copy it or implement your own signature function:
 
