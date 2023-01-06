@@ -62,7 +62,7 @@ def prepare_private(
     headers = headers or {}
     headers["Content-Type"] = "application/x-www-form-urlencoded; charset=utf-8"
     request = requests.Request("POST", f"{API_URL}{url}", data=data, headers=headers)
-    return just(request.prepare())
+    return just(request)
 
 
 def send(

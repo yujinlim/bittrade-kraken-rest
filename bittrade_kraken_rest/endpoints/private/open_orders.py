@@ -1,9 +1,8 @@
 import dataclasses
 
-from bittrade_kraken_rest.connection import send_private
+from bittrade_kraken_rest.connection.observable import prepare_private
 from bittrade_kraken_rest.models.private.get_open_orders import (
     GetOpenOrdersOptions,
-    GetOpenOrdersResponse,
     GetOpenOrdersResult,
 )
 
@@ -15,8 +14,7 @@ def get_open_orders(*, options: GetOpenOrdersOptions = None):
     :return:
     """
     options = options or GetOpenOrdersOptions()
-    return send_private(
+    return prepare_private(
         url="/0/private/OpenOrders",
         data=dataclasses.asdict(options),
-        result_class=GetOpenOrdersResult,
     )
