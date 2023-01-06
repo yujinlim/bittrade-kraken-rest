@@ -7,3 +7,7 @@ def get_system_status() -> GetSystemStatusResult:
         url='/0/public/SystemStatus',
         result_class=GetSystemStatusResult
     )
+
+__all__ = [
+    "get_system_status",
+]

@@ -6,17 +6,29 @@ from reactivex.scheduler import CurrentThreadScheduler
 
 API_URL = 'https://api.kraken.com'
 
-session = requests.Session()
+_session = requests.Session()
 
-def send_public(url: str, *, session_: Optional[requests.Session]=None, **kwargs) -> Observable[requests.Response]:
-    _session = session_ or session
+def send_public(url: str, *, session: Optional[requests.Session]=None, **kwargs) -> Observable[requests.Response]:
+    request = requests.Request(
+        'GET',
+        f'{API_URL}{url}',
+        params=kwargs
+    )
+    return send(request.prepare(), session_=session)
+
+def send(request: requests.PreparedRequest, *, session_: Optional[requests.Session]=None) -> Observable[requests.Response]:
+    session = session_ or _session
     def subscribe(observer: ObserverBase, scheduler: Optional[SchedulerBase]=None):
         scheduler_ = scheduler or CurrentThreadScheduler()
         def action(*_):
-            response = _session.get(f'{API_URL}{url}', params=kwargs)
+            response = session.send(request)
             if response.ok:
-                observer.on_next(response)
-                observer.on_completed()
+                as_json = response.json()
+                if not as_json['error']:
+                    observer.on_next(response)
+                    observer.on_completed()
+                else:
+                    observer.on_error(Exception(as_json['error'][0]))
             else:
                 try:
                     response.raise_for_status()

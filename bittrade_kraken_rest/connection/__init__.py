@@ -4,6 +4,7 @@ import requests
 from bittrade_kraken_rest.connection.nonce import get_nonce
 from bittrade_kraken_rest.models.request import fetch
 from returns.result import ResultE
+from .result import *
 
 
 API_URL = 'https://api.kraken.com'

@@ -13,3 +13,8 @@ def get_server_time() -> Observable[requests.Response]:
     return send_public(
         url='/0/public/Time'
     )
+
+__all__ = [
+    "GetServerTimeResult",
+    "get_server_time",
+]
