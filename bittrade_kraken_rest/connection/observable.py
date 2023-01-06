@@ -1,9 +1,11 @@
-from typing import Optional
+from typing import Any, Optional
 
 import requests
-from reactivex import Observable
+from reactivex import Observable, just
 from reactivex.abc import ObserverBase, SchedulerBase
 from reactivex.scheduler import CurrentThreadScheduler
+
+from bittrade_kraken_rest.connection.nonce import get_nonce
 
 API_URL = "https://api.kraken.com"
 
@@ -11,10 +13,56 @@ _session = requests.Session()
 
 
 def send_public(
-    url: str, *, session: Optional[requests.Session] = None, **kwargs
+    url: str,
+    *,
+    session: Optional[requests.Session] = None,
+    params: Optional[dict[str, Any]] = None,
+    headers: Optional[dict[str, Any]] = None,
 ) -> Observable[requests.Response]:
-    request = requests.Request("GET", f"{API_URL}{url}", params=kwargs)
+    """Send request to Kraken public REST API.
+
+    All public endpoints use GET
+
+      Args:
+          url (str): should start with a "/" or include the full kraken api domain (so you may use beta apis)
+          params (dict): Query params
+          headers:
+
+      Returns:
+          requests.Response:
+    """
+    request = requests.Request(
+        "GET", f"{API_URL}{url}", params=params or {}, headers=headers or {}
+    )
     return send(request.prepare(), session_=session)
+
+
+def prepare_private(
+    url: str,
+    *,
+    data: Optional[dict[str, Any]] = None,
+    headers: Optional[dict[str, Any]] = None,
+) -> Observable[requests.PreparedRequest]:
+    """Prepares a request to be sent to private API.
+    Needs to be signed by user's own code
+
+    All public endpoints use POST
+
+      Args:
+          url (str): should start with a "/" or include the full kraken api domain (so you may use beta apis)
+          params (dict): Query params
+          headers:
+
+      Returns:
+          requests.PreparedRequest:
+    """
+    data = data or {}
+    if "nonce" not in data:
+        data = dict(nonce=get_nonce(), **data)
+    headers = headers or {}
+    headers["Content-Type"] = "application/x-www-form-urlencoded; charset=utf-8"
+    request = requests.Request("POST", f"{API_URL}{url}", data=data, headers=headers)
+    return just(request.prepare())
 
 
 def send(
@@ -40,6 +88,6 @@ def send(
                 except Exception as exc:
                     observer.on_error(exc)
 
-        scheduler_.schedule(action)
+        return scheduler_.schedule(action)
 
     return Observable(subscribe)
