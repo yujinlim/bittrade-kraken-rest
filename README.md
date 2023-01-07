@@ -1,24 +1,18 @@
-ELM Bittrade's Kraken REST package & optional CLI
-====
+# ELM Bittrade's Kraken REST package & optional CLI
 
-Install
----
+## Install
 
 `pip install bittrade-kraken-rest` or `poetry add bittrade-kraken-rest`
 
 Not all Kraken endpoints are implemented yet.
 
-Public endpoints
-------
+# Public endpoints
 
 ```python
-from bittrade_kraken_rest import get_server_time, GetServerTimeResult, map_get_result
+from bittrade_kraken_rest import get_server_time
 
-get_server_time().pipe(
-    map_get_result(GetTradeBalanceResult)
-).subscribe(
-    on_next=lambda x: print('Server time:', x)
-)
+server_time = get_server_time().run()
+print(server_time) # GetServerTimeResult(unixtime=1673053481, rfc1123='Sat, 07 Jan 23 01:04:41 +0000')
 ```
 
 *The above example is complete, it should run as is*
@@ -26,7 +20,7 @@ get_server_time().pipe(
 Bring Your Own ~~Credentials~~ Signature (Private endpoints)
 ---
 
-TLDR; Don't pass your API secret but sign the requests yourself, with your own code. It's safer.
+TLDR; Don't agree to pass your API secret to third-party code; instead sign the requests yourself, with your own code. It's safer.
 
 This library doesn't want to ever access your Kraken secret keys.
 
@@ -34,47 +28,95 @@ Most libraries expect you to provide your api key and secret. I'm not comfortabl
 
 Here instead, the library prepares the request, which you then sign using your own code and the library finishes the job. It has NO access to your secret.
 
-Thankfully this is quite straightforward: you need to implement a `sign(request: PreparedRequest) -> PreparedRequest` method which sets the correct headers and then follow a two step process:
-
-```python
-from bittrade_kraken_rest import get_websockets_token, GetWebsocketsTokenResult, map_get_result
-from reactivex import operators
-
-get_websockets_token().pipe(
-    operators.map(sign),
-    map_get_result(GetWebsocketsTokenResult)
-).subscribe(
-    on_next=lambda x: print('Token:', x.token),
-    on_error=lambda exc: print('Failed to load token %s', exc)
-)
-```
-
-*The above example is complete, it should run as is*
-
-And here is a sample code for `sign` implementation. Feel free to copy it or implement your own signature function:
+Thankfully this is quite straightforward: you need to implement a `sign(x: tuple[PreparedRequest, str, dict[str, Any]]) -> PreparedRequest` method which sets the correct headers. Below is an example of such a signature function:
 
 ```python
 from os import getenv
 import urllib, hmac, base64, hashlib
+from pathlib import Path
 
-# Taken (with a minor change on non_null_data) from https://docs.kraken.com/rest/#section/Authentication/Headers-and-Signature
+# Taken from https://docs.kraken.com/rest/#section/Authentication/Headers-and-Signature
 def generate_kraken_signature(urlpath, data, secret):
-    non_null_data = {k: v for k, v in data.items() if v is not None}
-    post_data = urllib.parse.urlencode(non_null_data)
-    encoded = (str(data['nonce']) + post_data).encode()
+    post_data = urllib.parse.urlencode(data)
+    encoded = (str(data["nonce"]) + post_data).encode()
     message = urlpath.encode() + hashlib.sha256(encoded).digest()
     mac = hmac.new(base64.b64decode(secret), message, hashlib.sha512)
     signature_digest = base64.b64encode(mac.digest())
     return signature_digest.decode()
 
+# Here the key/secret are loaded from a .gitignored folder, but you can use environment variables or other method of configuration
+def sign(x: tuple[PreparedRequest, str, dict[str, Any]]):
+    request, url, data = x
+    request.headers["API-Key"] = Path("./config_local/key").read_text()
+    request.headers["API-Sign"] = generate_kraken_signature(
+        url, data, Path("./config_local/secret").read_text()
+    )
+    return request
 
-def sign(request):
-    request.headers['API-Key'] = getenv('KRAKEN_API_KEY')  # this is just one example of how to read the API key/secret; alternatives include docker secrets and config files
-    request.headers['API-Sign'] = generate_kraken_signature(request.url, request.data, getenv('KRAKEN_API_SECRET'))
 ```
 
+With that in place, a observable pipe will get you the result you need:
 
-CLI
----
+
+```python
+from bittrade_kraken_rest import get_websockets_token_request, get_websockets_token_result
+from reactivex import operators
+
+result = get_websockets_token_request().pipe(
+    operators.map(sign),
+    get_websockets_token_result()
+).run()
+```
+
+### Full example with signature function
+
+```python
+from os import getenv
+import urllib, hmac, base64, hashlib
+from pathlib import Path
+from bittrade_kraken_rest import get_websockets_token_request, get_websockets_token_result
+from reactivex import operators
+
+# Taken from https://docs.kraken.com/rest/#section/Authentication/Headers-and-Signature
+def generate_kraken_signature(urlpath, data, secret):
+    post_data = urllib.parse.urlencode(data)
+    encoded = (str(data["nonce"]) + post_data).encode()
+    message = urlpath.encode() + hashlib.sha256(encoded).digest()
+    mac = hmac.new(base64.b64decode(secret), message, hashlib.sha512)
+    signature_digest = base64.b64encode(mac.digest())
+    return signature_digest.decode()
+
+# Here the key/secret are loaded from a .gitignored folder, but you can use environment variables or other method of configuration
+def sign(x: tuple[PreparedRequest, str, dict[str, Any]]):
+    request, url, data = x
+    request.headers["API-Key"] = Path("./config_local/key").read_text()
+    request.headers["API-Sign"] = generate_kraken_signature(
+        url, data, Path("./config_local/secret").read_text()
+    )
+    return request
+
+result = get_websockets_token_request().pipe(
+    operators.map(sign),
+    get_websockets_token_result()
+).run()
+
+```
+
+*The above example is complete, it should run as is*
+
+### Observables
+
+The above examples use `.run()` to trigger the observable subscription but Observables make it very easy to create pipes, retries and more. All operators can be found on the [RxPy read the docs](https://rxpy.readthedocs.io/en/latest/).
+
+## Tests
+
+```
+pytest
+```
+
+Note that integration tests require a valid key/secret pair saved as `key` and `secret` files in a `.config_local` folder placed at the root of the repo.
+
+## CLI
+
 
 The CLI has been moved to [its own repo](https://github.com/TechSpaceAsia/bittrade-kraken-cli)

@@ -1,8 +1,9 @@
-import dataclasses
+from decimal import Decimal
+from pydantic.dataclasses import dataclass
 from typing import Dict, List
 
 
-@dataclasses.dataclass
+@dataclass
 class Order:
     refid: str
     userref: str
@@ -11,11 +12,11 @@ class Order:
     starttm: int
     expiretm: int
     descr: Dict
-    vol: str
-    vol_exec: str
-    cost: str
+    vol: Decimal
+    vol_exec: Decimal
+    cost: Decimal
     fee: str
-    price: str
+    price: Decimal
     stopprice: str
     limitprice: str
     trigger: str
