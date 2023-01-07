@@ -6,6 +6,14 @@ authors = ["Matt Kho <matt@techspace.asia>"]
 readme = "README.md"
 homepage = "https://github.com/TechSpaceAsia/bittrade-kraken-rest"
 repository = "https://github.com/TechSpaceAsia/bittrade-kraken-rest"
+license = "MIT"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Topic :: Office/Business :: Financial :: Investment",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
 
 [tool.poetry.dependencies]
 python = "^3.10"

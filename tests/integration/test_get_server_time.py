@@ -1,4 +1,4 @@
-from bittrade_kraken_rest import GetServerTimeResult, get_server_time, map_to_result
+from bittrade_kraken_rest import get_server_time
 
 
 def test_get_server_time():

@@ -1,6 +1,7 @@
 from decimal import Decimal
+from typing import Any
+
 from pydantic.dataclasses import dataclass
-from typing import Dict, List
 
 
 @dataclass
@@ -11,7 +12,7 @@ class Order:
     opentm: int
     starttm: int
     expiretm: int
-    descr: Dict
+    descr: dict[str, Any]
     vol: Decimal
     vol_exec: Decimal
     cost: Decimal
@@ -22,4 +23,4 @@ class Order:
     trigger: str
     misc: str
     oflags: str
-    trades: List
+    trades: list[Any]

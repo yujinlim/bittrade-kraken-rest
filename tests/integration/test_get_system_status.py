@@ -1,5 +1,6 @@
-from bittrade_kraken_rest import get_system_status
 from datetime import datetime
+
+from bittrade_kraken_rest import get_system_status
 
 
 def test_get_system_status():

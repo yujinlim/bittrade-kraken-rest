@@ -1,12 +1,12 @@
 from typing import TYPE_CHECKING, Any, Callable, Type, TypeVar
 
-from reactivex import Observable, operators
+from reactivex import Observable, compose, operators
 from requests.models import PreparedRequest, Response
-from reactivex import compose
+
 from .observable import send
 
 if TYPE_CHECKING:
-    from pydantic.dataclasses import Dataclass
+    pass
 
 
 _T = TypeVar("_T")

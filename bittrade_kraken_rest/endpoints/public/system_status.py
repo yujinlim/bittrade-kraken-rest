@@ -1,9 +1,11 @@
-from bittrade_kraken_rest.connection.observable import send_public
-from bittrade_kraken_rest.connection.result import map_to_result
+from datetime import datetime
 from typing import Literal
+
 from pydantic.dataclasses import dataclass
 from reactivex import Observable
-from datetime import datetime
+
+from bittrade_kraken_rest.connection.observable import send_public
+from bittrade_kraken_rest.connection.result import map_to_result
 
 Status = Literal["online", "maintenance", "cancel_only", "post_only"]
 

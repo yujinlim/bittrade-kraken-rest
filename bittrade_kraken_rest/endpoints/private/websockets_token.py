@@ -1,4 +1,5 @@
 from pydantic.dataclasses import dataclass
+
 from bittrade_kraken_rest.connection.observable import prepare_private
 from bittrade_kraken_rest.connection.result import send_and_map_to_result
 

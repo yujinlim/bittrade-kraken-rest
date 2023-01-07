@@ -1,8 +1,10 @@
 from reactivex import operators
+
 from bittrade_kraken_rest import (
     get_websockets_token_request,
     get_websockets_token_result,
 )
+
 from .sign import sign
 
 

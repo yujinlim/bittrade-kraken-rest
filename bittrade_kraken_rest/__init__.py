@@ -1,25 +1,25 @@
-from .endpoints.public.server_time import GetServerTimeResult, get_server_time
-from .endpoints.public.system_status import GetSystemStatusResult, get_system_status
+from .connection.observable import send, send_public
+from .connection.result import map_to_result
 from .endpoints.private.account_balance import (
+    GetAccountBalanceResult,
     get_account_balance_request,
     get_account_balance_result,
-    GetAccountBalanceResult,
-)
-from .endpoints.private.websockets_token import (
-    get_websockets_token_request,
-    get_websockets_token_result,
-    GetWebsocketsTokenResult,
 )
 from .endpoints.private.open_orders import (
-    get_open_orders_request,
-    get_open_orders_result,
     GetOpenOrdersOptions,
     GetOpenOrdersResult,
+    get_open_orders_request,
+    get_open_orders_result,
 )
-from .connection.result import map_to_result
-from .connection.observable import send, send_public
+from .endpoints.private.websockets_token import (
+    GetWebsocketsTokenResult,
+    get_websockets_token_request,
+    get_websockets_token_result,
+)
+from .endpoints.public.server_time import GetServerTimeResult, get_server_time
+from .endpoints.public.system_status import GetSystemStatusResult, get_system_status
 
-__version__ = "0.11.0"
+__version__ = "0.12.1"
 
 __all__ = [
     "__version__",
