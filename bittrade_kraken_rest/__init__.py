@@ -11,6 +11,12 @@ from .endpoints.private.open_orders import (
     get_open_orders_request,
     get_open_orders_result,
 )
+from .endpoints.private.trade_history import (
+    GetTradeHistoryOptions,
+    GetTradeHistoryResult,
+    get_trade_history_request,
+    get_trade_history_result,
+)
 from .endpoints.private.websockets_token import (
     GetWebsocketsTokenResult,
     get_websockets_token_request,
@@ -23,6 +29,10 @@ __version__ = "0.12.1"
 
 __all__ = [
     "__version__",
+    "GetTradeHistoryOptions",
+    "GetTradeHistoryResult",
+    "get_trade_history_request",
+    "get_trade_history_result",
     "get_account_balance_request",
     "get_account_balance_result",
     "get_open_orders_request",

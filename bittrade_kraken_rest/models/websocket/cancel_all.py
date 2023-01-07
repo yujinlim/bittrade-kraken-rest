@@ -11,4 +11,4 @@ class CancelAllEvent:
 class CancelAllResult:
     count: int = 0
     event = "cancelAllStatus"
-    status: str = Literal["ok", "error"]
+    status: Literal["ok", "error"] = "ok"
