@@ -1,8 +1,9 @@
 from typing import TYPE_CHECKING, Any, Callable, Type, TypeVar
 
 from reactivex import Observable, operators
-from requests.models import Response
+from requests.models import PreparedRequest, Response
 from reactivex import compose
+from .observable import send
 
 if TYPE_CHECKING:
     from pydantic.dataclasses import Dataclass
@@ -23,6 +24,12 @@ def map_to_result(
         operators.map(lambda x: x["result"]),
         operators.map(lambda x: result_class(**x)),
     )
+
+
+def send_and_map_to_result(
+    result_class: Type[_T],
+) -> Callable[[Observable[PreparedRequest]], Observable[_T]]:
+    return compose(operators.flat_map(send), map_to_result(result_class))
 
 
 __all__ = [

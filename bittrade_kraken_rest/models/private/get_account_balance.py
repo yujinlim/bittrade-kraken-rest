@@ -3,7 +3,7 @@ from typing import Dict
 
 from ..message import KrakenMessage
 
-GetAccountBalanceResult = Dict[str, str]
+GetAccountBalanceResult = dict[str, str]
 
 
 @dataclasses.dataclass

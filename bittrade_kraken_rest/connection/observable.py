@@ -42,7 +42,7 @@ def prepare_private(
     *,
     data: Optional[dict[str, Any]] = None,
     headers: Optional[dict[str, Any]] = None,
-) -> Observable[requests.PreparedRequest]:
+) -> Observable[tuple[requests.PreparedRequest, str, dict[str, Any]]]:
     """Prepares a request to be sent to private API.
     Needs to be signed by user's own code
 
@@ -58,11 +58,13 @@ def prepare_private(
     """
     data = data or {}
     if "nonce" not in data:
-        data = dict(nonce=get_nonce(), **data)
+        data = dict(
+            nonce=get_nonce(), **{k: v for k, v in data.items() if v is not None}
+        )
     headers = headers or {}
     headers["Content-Type"] = "application/x-www-form-urlencoded; charset=utf-8"
     request = requests.Request("POST", f"{API_URL}{url}", data=data, headers=headers)
-    return just(request)
+    return just((request.prepare(), url, data))
 
 
 def send(
