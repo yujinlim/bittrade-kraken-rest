@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "bittrade-kraken-rest"
-version = "0.12.0"
+version = "0.12.1"
 description = "Kraken REST library"
 authors = ["Matt Kho <matt@techspace.asia>"]
 readme = "README.md"
