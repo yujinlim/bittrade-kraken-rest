@@ -1,7 +1,7 @@
+import dataclasses
 from decimal import Decimal
 from typing import Any, Optional
 
-import dataclasses
 from pydantic.dataclasses import dataclass
 
 
@@ -17,11 +17,11 @@ class Order:
     vol_exec: Decimal
     cost: Decimal
     price: Decimal
-    refid: Optional[str] = ''
-    fee: Optional[str] = ''
-    stopprice: Optional[str] = ''
-    limitprice: Optional[str] = ''
-    trigger: Optional[str] = ''
-    misc: Optional[str] = ''
-    oflags: Optional[str] = ''
+    refid: Optional[str] = ""
+    fee: Optional[str] = ""
+    stopprice: Optional[str] = ""
+    limitprice: Optional[str] = ""
+    trigger: Optional[str] = ""
+    misc: Optional[str] = ""
+    oflags: Optional[str] = ""
     trades: Optional[list[Any]] = dataclasses.field(default_factory=list)

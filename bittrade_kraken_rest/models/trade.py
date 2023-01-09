@@ -1,6 +1,6 @@
 import dataclasses
 from decimal import Decimal
-from typing import Any, Optional
+from typing import Optional
 
 from pydantic.dataclasses import dataclass
 

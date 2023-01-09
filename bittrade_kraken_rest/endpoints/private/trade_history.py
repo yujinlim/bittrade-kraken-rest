@@ -1,8 +1,8 @@
 import dataclasses
+import time
 from typing import Literal, Optional
 
 from pydantic.dataclasses import dataclass
-import time
 
 from bittrade_kraken_rest.connection.observable import prepare_private
 from bittrade_kraken_rest.connection.result import send_and_map_to_result
@@ -17,7 +17,9 @@ class GetTradeHistoryResult:
 
 @dataclasses.dataclass
 class GetTradeHistoryOptions:
-    type: Literal["all", "any position", "closed position", "closing position", "no position"] = "all"
+    type: Literal[
+        "all", "any position", "closed position", "closing position", "no position"
+    ] = "all"
     trades: bool = False
     start: int = 0
     end: int = dataclasses.field(default_factory=lambda: int(time.time()))

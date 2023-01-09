@@ -31,7 +31,12 @@ def send_and_map_to_result(
 ) -> Callable[[Observable[PreparedRequest]], Observable[_T]]:
     def log_me(x):
         print(x.json())
-    return compose(operators.flat_map(send), operators.do_action(log_me), map_to_result(result_class))
+
+    return compose(
+        operators.flat_map(send),
+        operators.do_action(log_me),
+        map_to_result(result_class),
+    )
 
 
 __all__ = [
