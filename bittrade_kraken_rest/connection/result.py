@@ -10,7 +10,8 @@ if TYPE_CHECKING:
 
 
 _T = TypeVar("_T")
-# _T = TypeVar("_T", bound="Dataclass") Need to look into this: All our @dataclass are not compatible with Dataclass
+# _T = TypeVar("_T", bound="Dataclass")
+# Need to look into this: All our @dataclass are not compatible with Dataclass
 
 
 def map_to_result(

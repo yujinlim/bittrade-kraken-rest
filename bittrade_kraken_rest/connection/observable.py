@@ -24,7 +24,8 @@ def send_public(
     All public endpoints use GET
 
       Args:
-          url (str): should start with a "/" or include the full kraken api domain (so you may use beta apis)
+          url (str): should start with a "/" or include the full kraken api domain
+          (so you may use beta apis)
           params (dict): Query params
           headers:
 
@@ -46,15 +47,8 @@ def prepare_private(
     """Prepares a request to be sent to private API.
     Needs to be signed by user's own code
 
-    All public endpoints use POST
-
-      Args:
-          url (str): should start with a "/" or include the full kraken api domain (so you may use beta apis)
-          params (dict): Query params
-          headers:
-
-      Returns:
-          requests.PreparedRequest:
+    Returns:
+        requests.PreparedRequest:
     """
     data = data or {}
     if "nonce" not in data:
