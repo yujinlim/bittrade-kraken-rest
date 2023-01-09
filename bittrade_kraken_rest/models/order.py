@@ -1,12 +1,12 @@
 from decimal import Decimal
-from typing import Any
+from typing import Any, Optional
 
+import dataclasses
 from pydantic.dataclasses import dataclass
 
 
 @dataclass
 class Order:
-    refid: str
     userref: str
     status: str
     opentm: int
@@ -16,11 +16,12 @@ class Order:
     vol: Decimal
     vol_exec: Decimal
     cost: Decimal
-    fee: str
     price: Decimal
-    stopprice: str
-    limitprice: str
-    trigger: str
-    misc: str
-    oflags: str
-    trades: list[Any]
+    refid: Optional[str] = ''
+    fee: Optional[str] = ''
+    stopprice: Optional[str] = ''
+    limitprice: Optional[str] = ''
+    trigger: Optional[str] = ''
+    misc: Optional[str] = ''
+    oflags: Optional[str] = ''
+    trades: Optional[list[Any]] = dataclasses.field(default_factory=list)

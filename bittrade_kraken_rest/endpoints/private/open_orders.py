@@ -10,7 +10,7 @@ from bittrade_kraken_rest.models.order import Order
 
 @dataclass
 class GetOpenOrdersResult:
-    open: dict[str, list[Order]]
+    open: dict[str, Order]
 
 
 @dataclasses.dataclass
