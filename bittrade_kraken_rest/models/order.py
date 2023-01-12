@@ -6,13 +6,22 @@ from pydantic.dataclasses import dataclass
 
 
 @dataclass
+class OrderDescr:
+    pair: str
+    price: Decimal
+    price2: Decimal
+    type: str
+    ordertype: str
+
+
+@dataclass
 class Order:
     userref: str
     status: str
     opentm: int
     starttm: int
     expiretm: int
-    descr: dict[str, Any]
+    descr: OrderDescr
     vol: Decimal
     vol_exec: Decimal
     cost: Decimal
