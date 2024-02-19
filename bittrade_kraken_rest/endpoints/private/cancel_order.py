@@ -15,4 +15,4 @@ def cancel_order_request(*, txid: str | int):
 
 
 def cancel_order_result():
-    return send_and_map_to_result(CancelResult)
+    return send_and_map_to_result(CancelOrderResult)
