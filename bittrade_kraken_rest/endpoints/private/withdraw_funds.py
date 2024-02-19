@@ -7,10 +7,10 @@ from requests.models import PreparedRequest
 
 from bittrade_kraken_rest.connection.result import send_and_map_to_result
 
-GetWithdrawalInfoResult = TypedDict("GetWithdrawalInfoResult", {"method": str, "limit": str, "amount": str, "fee": str})
+WithdrawResult = TypedDict("WithdrawResult", {"refid": str})
 
 
-def get_withdrawal_info_request(*, asset: str, key: str, amount: Decimal, address: str = "", max_fee: str = ""):
+def withdraw_request(*, asset: str, key: str, amount: Decimal, address: str = "", max_fee: str = ""):
     """
     Get withdrawal info
     :return:
@@ -27,5 +27,5 @@ def get_withdrawal_info_request(*, asset: str, key: str, amount: Decimal, addres
     return prepare_private("/0/private/Withdraw", data=data)
 
 
-def get_withdrawal_info_result() -> Callable[[Observable[PreparedRequest]], Observable[GetWithdrawalInfoResult]]:
-    return send_and_map_to_result(GetWithdrawalInfoResult)
+def withdraw_result() -> Callable[[Observable[PreparedRequest]], Observable[WithdrawResult]]:
+    return send_and_map_to_result(WithdrawResult)
