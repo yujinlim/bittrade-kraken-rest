@@ -38,6 +38,9 @@ from .endpoints.private.websockets_token import (
 from .endpoints.private.cancel_all import (
     cancel_all_request, cancel_all_result, CancelAllResult
 )
+from .endpoints.private.cancel_order import (
+    cancel_order_request, cancel_order_result, CancelOrderResult
+)
 from .endpoints.private.withdraw_funds import (
     withdraw_request, withdraw_result, WithdrawResult
 )
@@ -45,7 +48,7 @@ from .endpoints.public.server_time import GetServerTimeResult, get_server_time
 from .endpoints.public.ticker import ticker, ticker_response, TickerResult, TickerResultEntry
 from .endpoints.public.system_status import GetSystemStatusResult, get_system_status
 
-__version__ = "0.12.1"
+__version__ = "0.13.4"
 
 __all__ = [
     "__version__",
@@ -53,6 +56,9 @@ __all__ = [
     "add_order_result",
     "AddOrderRequest",
     "AddOrderResult",
+    "CancelOrderResult",
+    "cancel_order_request",
+    "cancel_order_result",
     "cancel_all_request",
     "cancel_all_result",
     "CancelAllResult",
