@@ -11,6 +11,18 @@ from .endpoints.private.open_orders import (
     get_open_orders_request,
     get_open_orders_result,
 )
+from .endpoints.private.add_order import (
+    AddOrderRequest,
+    OrderType,
+    OrderSide,
+    AddOrderResult,
+    OrderDescr,
+)
+from .endpoints.private.status_of_recent_deposits import (
+    GetStatusOfRecentDepositsResult,
+    get_status_of_recent_deposits_request,
+    get_status_of_recent_deposits_result,
+)
 from .endpoints.private.trade_history import (
     GetTradeHistoryOptions,
     GetTradeHistoryResult,
@@ -33,6 +45,8 @@ __version__ = "0.12.1"
 
 __all__ = [
     "__version__",
+    "AddOrderRequest",
+    "AddOrderResult",
     "cancel_all_request",
     "cancel_all_result",
     "CancelAllResult",
@@ -40,6 +54,8 @@ __all__ = [
     "get_account_balance_result",
     "get_open_orders_request",
     "get_open_orders_result",
+    "get_status_of_recent_deposits_request",
+    "get_status_of_recent_deposits_result",
     "get_server_time",
     "get_system_status",
     "get_trade_history_request",
@@ -50,11 +66,15 @@ __all__ = [
     "GetOpenOrdersOptions",
     "GetOpenOrdersResult",
     "GetServerTimeResult",
+    "GetStatusOfRecentDepositsResult",
     "GetSystemStatusResult",
     "GetTradeHistoryOptions",
     "GetTradeHistoryResult",
     "GetWebsocketsTokenResult",
     "map_to_result",
+    "OrderDescr",
+    "OrderSide",
+    "OrderType",
     "send_public",
     "send",
     "ticker", 
