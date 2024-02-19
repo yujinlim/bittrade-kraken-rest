@@ -17,6 +17,7 @@ from .endpoints.private.add_order import (
     OrderSide,
     AddOrderResult,
     OrderDescr,
+    add_order_request, add_order_result
 )
 from .endpoints.private.status_of_recent_deposits import (
     GetStatusOfRecentDepositsResult,
@@ -37,6 +38,9 @@ from .endpoints.private.websockets_token import (
 from .endpoints.private.cancel_all import (
     cancel_all_request, cancel_all_result, CancelAllResult
 )
+from .endpoints.private.withdraw_funds import (
+    withdraw_request, withdraw_result, WithdrawResult
+)
 from .endpoints.public.server_time import GetServerTimeResult, get_server_time
 from .endpoints.public.ticker import ticker, ticker_response, TickerResult, TickerResultEntry
 from .endpoints.public.system_status import GetSystemStatusResult, get_system_status
@@ -45,6 +49,8 @@ __version__ = "0.12.1"
 
 __all__ = [
     "__version__",
+    "add_order_request",
+    "add_order_result",
     "AddOrderRequest",
     "AddOrderResult",
     "cancel_all_request",
@@ -81,4 +87,7 @@ __all__ = [
     "ticker_response", 
     "TickerResult", 
     "TickerResultEntry",
+    "withdraw_request",
+    "withdraw_result",
+    "WithdrawResult",
 ]
