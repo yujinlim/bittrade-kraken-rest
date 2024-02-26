@@ -44,6 +44,11 @@ from .endpoints.private.cancel_order import (
 from .endpoints.private.withdraw_funds import (
     withdraw_request, withdraw_result, WithdrawResult
 )
+from .endpoints.private.extended_balance import (
+    get_extended_balance_request,
+    get_extended_balance_result,
+    ExtendedBalance, GetExtendedBalanceResult
+)
 from .endpoints.public.server_time import GetServerTimeResult, get_server_time
 from .endpoints.public.ticker import ticker, ticker_response, TickerResult, TickerResultEntry
 from .endpoints.public.system_status import GetSystemStatusResult, get_system_status
@@ -64,6 +69,10 @@ __all__ = [
     "CancelAllResult",
     "get_account_balance_request",
     "get_account_balance_result",
+    "get_extended_balance_request",
+    "get_extended_balance_result",
+    "ExtendedBalance",
+    "GetExtendedBalanceResult",
     "get_open_orders_request",
     "get_open_orders_result",
     "get_status_of_recent_deposits_request",
