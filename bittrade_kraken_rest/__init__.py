@@ -24,6 +24,11 @@ from .endpoints.private.status_of_recent_deposits import (
     get_status_of_recent_deposits_request,
     get_status_of_recent_deposits_result,
 )
+from .endpoints.private.status_of_recent_withdrawals import (
+    GetStatusOfRecentWithdrawalsResult,
+    get_status_of_recent_withdrawals_request,
+    get_status_of_recent_withdrawals_result,
+)
 from .endpoints.private.trade_history import (
     GetTradeHistoryOptions,
     GetTradeHistoryResult,
@@ -71,6 +76,9 @@ __all__ = [
     "get_account_balance_result",
     "get_extended_balance_request",
     "get_extended_balance_result",
+    "get_status_of_recent_withdrawals_request",
+    "get_status_of_recent_withdrawals_result",
+    "GetStatusOfRecentWithdrawalsResult",
     "ExtendedBalance",
     "GetExtendedBalanceResult",
     "get_open_orders_request",
