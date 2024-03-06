@@ -46,6 +46,8 @@ class AddOrderRequest:
             del data["price2"]
         if not self.displayvol:
             del data["displayvol"]
+        if not self.oflags:
+            del data["oflags"]
         return {k: v for k, v in data.items() if v is not None}
 
 
