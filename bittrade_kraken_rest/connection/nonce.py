@@ -1,5 +1,5 @@
-from datetime import datetime
+import time
 
 
 def get_nonce():
-    return int(datetime.now().timestamp() * 1e3)
+    return time.time_ns()
