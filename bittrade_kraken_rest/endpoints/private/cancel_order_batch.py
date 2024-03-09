@@ -14,5 +14,5 @@ def cancel_order_batch_request(ids: list[str]):
     return prepare_private(url="/0/private/CancelOrderBatch", data={"orders": ids})
 
 
-def cancel_order_result():
+def cancel_order_batch_result():
     return send_and_map_to_result(CancelOrderBatchResult)

@@ -2,11 +2,14 @@ from typing import TYPE_CHECKING, Any, Callable, Type, TypeVar
 
 from reactivex import Observable, compose, operators
 from requests.models import PreparedRequest, Response
+from logging import getLogger
 
 from .observable import send
 
 if TYPE_CHECKING:
     pass
+
+logger = getLogger(__name__)
 
 
 _T = TypeVar("_T")
@@ -31,7 +34,7 @@ def send_and_map_to_result(
     result_class: Type[_T],
 ) -> Callable[[Observable[PreparedRequest]], Observable[_T]]:
     def log_me(x):
-        print(x.json())
+        logger.debug("Result: %s", x.json())
 
     return compose(
         operators.flat_map(send),

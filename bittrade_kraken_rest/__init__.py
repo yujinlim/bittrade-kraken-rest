@@ -5,6 +5,11 @@ from .endpoints.private.account_balance import (
     get_account_balance_request,
     get_account_balance_result,
 )
+from .endpoints.private.cancel_order_batch import (
+    CancelOrderBatchResult,
+    cancel_order_batch_request,
+    cancel_order_batch_result,
+)
 from .endpoints.private.open_orders import (
     GetOpenOrdersOptions,
     GetOpenOrdersResult,
@@ -66,6 +71,9 @@ __all__ = [
     "add_order_result",
     "AddOrderRequest",
     "AddOrderResult",
+    "CancelOrderBatchResult",
+    "cancel_order_batch_request",
+    "cancel_order_batch_result",
     "CancelOrderResult",
     "cancel_order_request",
     "cancel_order_result",

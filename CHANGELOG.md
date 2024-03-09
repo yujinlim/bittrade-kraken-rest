@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.13.11] - 2024-03-10
+
+### Changed
+
+- Cancel order batch is now exported on root module
+- Results of requests mapped throught `send_and_map_result` aren't printed anymore; they are logged at the debug level
+
 ## [0.13.10] - 2024-03-10
 
 ### Added
