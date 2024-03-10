@@ -13,7 +13,7 @@ def cancel_order_batch_request(ids: list[str]):
     """
     if len(ids) == 1:
         return prepare_private(url="/0/private/CancelOrder", data={"txid": ids[0]})
-    return prepare_private(url="/0/private/CancelOrderBatch", data={"orders": ids})
+    return prepare_private(url="/0/private/CancelOrderBatch", json={"orders": ids})
 
 
 def cancel_order_batch_result():
