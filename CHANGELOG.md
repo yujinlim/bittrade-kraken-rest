@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.13.12] - 2024-03-10
+
+### Changed
+
+- Example signature method updated to reflect fix for json body
+- `prepare_private` accepts a `json` dict; if provided, content type header is set to application/json
+- batch cancel orders uses that new json argument to work
+- batch cancel orders reverts to regular cancel if only one id is passed (Kraken fails otherwise)
+
 ## [0.13.11] - 2024-03-10
 
 ### Changed

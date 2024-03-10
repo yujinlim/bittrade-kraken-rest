@@ -42,6 +42,7 @@ def prepare_private(
     url: str,
     *,
     data: Optional[dict[str, Any]] = None,
+    json: Optional[dict[str, Any]] = None,
     headers: Optional[dict[str, Any]] = None,
 ) -> Observable[tuple[requests.PreparedRequest, str, dict[str, Any]]]:
     """Prepares a request to be sent to private API.
@@ -50,14 +51,15 @@ def prepare_private(
     Returns:
         requests.PreparedRequest:
     """
-    data = data or {}
+    data = data or json or {}
     if "nonce" not in data:
         data = dict(
             nonce=get_nonce(), **{k: v for k, v in data.items() if v is not None}
         )
     headers = headers or {}
-    headers["Content-Type"] = "application/x-www-form-urlencoded; charset=utf-8"
-    request = requests.Request("POST", f"{API_URL}{url}", data=data, headers=headers)
+    headers["Content-Type"] = "application/x-www-form-urlencoded; charset=utf-8" if not json else "application/json"
+    kwargs = {"data": data} if not json else {"json": data}
+    request = requests.Request("POST", f"{API_URL}{url}", headers=headers, **kwargs)
     return just((request.prepare(), url, data))
 
 
