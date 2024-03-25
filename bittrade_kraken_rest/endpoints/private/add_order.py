@@ -25,6 +25,7 @@ class OrderSide(str, Enum):
 OrderDescr = TypedDict("OrderDescr", {"order": str})
 AddOrderResult = TypedDict("AddOrderResult", {"descr": OrderDescr, "txid": list[str]})
 
+
 @dataclasses.dataclass
 class AddOrderRequest:
     ordertype: OrderType
@@ -51,6 +52,7 @@ class AddOrderRequest:
         return {k: v for k, v in data.items() if v is not None}
 
 
+
 def add_order_request(request: AddOrderRequest):
     """
     Get open orders
@@ -61,4 +63,18 @@ def add_order_request(request: AddOrderRequest):
 
 
 def add_order_result():
+    return send_and_map_to_result(AddOrderResult)
+
+
+def edit_order_request(order_id: str, request: AddOrderRequest):
+    """
+    Get open orders
+    :return:
+    """
+    data = request.as_dict()
+    data["txid"] = order_id
+    return prepare_private(url="/0/private/EditOrder", data=data)
+
+
+def edit_order_result():
     return send_and_map_to_result(AddOrderResult)

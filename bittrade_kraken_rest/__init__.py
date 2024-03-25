@@ -22,7 +22,7 @@ from .endpoints.private.add_order import (
     OrderSide,
     AddOrderResult,
     OrderDescr,
-    add_order_request, add_order_result
+    add_order_request, add_order_result, edit_order_request, edit_order_result
 )
 from .endpoints.private.status_of_recent_deposits import (
     GetStatusOfRecentDepositsResult,
@@ -80,6 +80,8 @@ __all__ = [
     "cancel_all_request",
     "cancel_all_result",
     "CancelAllResult",
+    "edit_order_request",
+    "edit_order_result",
     "get_account_balance_request",
     "get_account_balance_result",
     "get_extended_balance_request",
