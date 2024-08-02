@@ -59,6 +59,11 @@ from .endpoints.private.extended_balance import (
     get_extended_balance_result,
     ExtendedBalance, GetExtendedBalanceResult
 )
+from .endpoints.private.query_order import (
+    QueryOrderResult,
+    query_order,
+    query_order_result,
+)
 from .endpoints.public.server_time import GetServerTimeResult, get_server_time
 from .endpoints.public.ticker import ticker, ticker_response, TickerResult, TickerResultEntry
 from .endpoints.public.system_status import GetSystemStatusResult, get_system_status
@@ -123,4 +128,7 @@ __all__ = [
     "withdraw_request",
     "withdraw_result",
     "WithdrawResult",
+    "QueryOrderResult",
+    "query_order",
+    "query_order_result",
 ]
